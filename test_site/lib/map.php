@@ -2,10 +2,12 @@
 	function getlocations() {
 		// Where we would call API
 		if(!isset($_SESSION['waypoints']) || $_SESSION['waypoints'] === NULL) {
-			$func = 'get_all_waypoints';
-			$get_waypoints_url = 'https://capstone-jailbreak-taw39.c9users.io/uwf_api/uwf_api.php?';
+			$func               = 'get_all_waypoints';
+			$key                = 'apikeygoeshere';
+			$get_waypoints_url  = 'https://capstone-jailbreak-taw39.c9users.io/uwf_api/uwf_api.php?';
 			$get_waypoints_url .= "call={$func}";
-			$params = '';
+			$get_waypoints_url .= "key={$key}";
+			$params             = '';
 
 			$_SESSION['waypoints'] = json_decode(file_get_contents($get_waypoints_url),true);
 		}
