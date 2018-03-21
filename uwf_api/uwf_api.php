@@ -28,7 +28,10 @@
 
 		if(is_array($_SESSION['waypoints']))
 			foreach($_SESSION['waypoints'] as $point)
-				if(preg_match("/{$name}/",strtoupper($point['alias'])))
+				if(
+					preg_match("/{$name}/",strtoupper($point['alias']))
+					|| preg_match("/{$name}/",strtoupper($point['name']))
+				)
 					array_push($returnpoints,$point);
 
 		return !empty($returnpoints) ? $returnpoints : false;
