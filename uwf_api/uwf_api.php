@@ -85,11 +85,25 @@
 
 	if(isset($_REQUEST['call'])) {
 		if(verify_user()) {
-			if(is_array($_REQUEST['call']))
-				foreach($_REQUEST['call'] as $function)
-					echo json_encode($function());
-			else
-				echo json_encode($_REQUEST['call']());
+			if(is_array($_REQUEST['call'])) {
+				foreach($_REQUEST['call'] as $function) {
+					if(array_search($function,get_defined_functions()['user'])) {
+						echo json_encode($function());
+					}
+					else {
+						echo json_encode(['error' => 'invalid function']);
+					}
+				}
+			}
+			else {
+				if(array_search($_REQUEST['call'],get_defined_functions()['user'])) {
+					echo json_encode($_REQUEST['call']());
+				}
+				else {
+					echo json_encode(['error' => 'invalid function']);
+				}
+			}
+
 		}
 		else {
 			echo json_encode(['error'=>'invalid key']);
