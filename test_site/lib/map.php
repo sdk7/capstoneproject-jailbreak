@@ -6,14 +6,14 @@
 			$key                = 'apikeygoeshere';
 			$get_waypoints_url  = 'https://capstone-jailbreak-taw39.c9users.io/uwf_api/uwf_api.php?';
 			$get_waypoints_url .= "call={$func}";
-			$get_waypoints_url .= "key={$key}";
+			$get_waypoints_url .= "&key={$key}";
 			$params             = '';
 
 			$_SESSION['waypoints'] = json_decode(file_get_contents($get_waypoints_url),true);
 		}
 		$start_options = array();
 		$end_options   = array();
-		if(!isset($_SESSION['waypoints'][0]['error']))	{
+		if(!isset($_SESSION['waypoints']['error']))	{
 			foreach($_SESSION['waypoints'] as $point) {
 
 				$insert_point = [
@@ -31,7 +31,7 @@
 		}
 		else {
 			echo json_encode([
-				'error' => $_SESSION['waypoints'][0]['error']
+				'error' => $_SESSION['waypoints']['error']
 			]);
 		}
 	}
