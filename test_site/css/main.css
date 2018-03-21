@@ -1,18 +1,22 @@
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
- #map {
-	height: 100%;
-	}
+#map {
+	height: 90%;
+}
+#test_site_header {
+	height: 5%;
+	background-color: grey;
+}
 #map-wrapper {
 	height: 100%;
 }
-  /* Optional: Makes the sample page fill the window. */
-  html, body {
+/* Optional: Makes the sample page fill the window. */
+html, body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-  }
-  #floating-panel {
+}
+#floating-panel {
 	position: absolute;
 	top: 10px;
 	left: 25%;
@@ -24,4 +28,4 @@
 	font-family: 'Roboto','sans-serif';
 	line-height: 30px;
 	padding-left: 10px;
-  }
+}
