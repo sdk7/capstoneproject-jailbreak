@@ -11,19 +11,27 @@
 		}
 		$start_options = array();
 		$end_options   = array();
-		foreach($_SESSION['waypoints'] as $point) {
-			$insert_point = [
-				'bldg_name' => $point['name'],
-				'lat'       => $point['coordinates'][1],
-				'long'      => $point['coordinates'][0]
-			];
-			array_push($start_options,$insert_point);
-			array_push($end_options,$insert_point);
+		if(!isset($_SESSION['waypoints'][0]['error']))	{
+			foreach($_SESSION['waypoints'] as $point) {
+
+				$insert_point = [
+					'bldg_name' => $point['name'],
+					'lat'       => $point['coordinates'][1],
+					'long'      => $point['coordinates'][0]
+				];
+				array_push($start_options,$insert_point);
+				array_push($end_options,$insert_point);
+			}
+			echo json_encode([
+				'start_options' => $start_options,
+				'end_options' => $end_options
+			]);
 		}
-		echo json_encode([
-			'start_options' => $start_options,
-			'end_options' => $end_options
-		]);
+		else {
+			echo json_encode([
+				'error' => $_SESSION['waypoints'][0]['error']
+			]);
+		}
 	}
 
 	// When calling from js with a post variable functionname

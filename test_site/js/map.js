@@ -14,14 +14,19 @@
 			maplocations = JSON.parse(output);
 		}
 	}).then(function() {
-		var source = $('#hb_map').html();
-		var template = Handlebars.compile(source);
-		var data = {
-			start_options : maplocations['start_options'],
-			end_options   : maplocations['end_options']
-		};
-		var $html = template(data);
-		$('#map-wrapper').html($html);
+		if(!maplocations['error']) {
+			var source = $('#hb_map').html();
+			var template = Handlebars.compile(source);
+			var data = {
+				start_options : maplocations['start_options'],
+				end_options   : maplocations['end_options']
+			};
+			var $html = template(data);
+			$('#map-wrapper').html($html);
+		}
+		else {
+			console.log(maplocations['error']);
+		}
 	});
 
 })(window)
