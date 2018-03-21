@@ -63,10 +63,18 @@
 
 	function refresh_waypoints() {
 		$_SESSION['waypoints'] = json_decode(file_get_contents('data.json'), true);
+		if(isset($_SESSION['waypoints']) && !empty($_SESSION['waypoints']))
+			return ['success' => 'success'];
+		else
+			return ['error' => 'Failed to refresh waypoints'];
 	}
 
 	function refresh_users() {
 		$_SESSION['users'] = json_decode(file_get_contents('users.json'), true);
+		if(isset($_SESSION['users']) && !empty($_SESSION['users']))
+			return ['success' => 'success'];
+		else
+			return ['error' => 'Failed to refresh waypoints'];
 	}
 
 	function verify_user() {
