@@ -4,7 +4,8 @@
 		if(!isset($_SESSION['waypoints']) || $_SESSION['waypoints'] === NULL) {
 			$func               = 'get_all_waypoints';
 			$key                = 'apikeygoeshere';
-			$get_waypoints_url  = 'https://capstone-jailbreak-taw39.c9users.io/uwf_api/uwf_api.php?';
+			// $get_waypoints_url  = 'https://capstone-jailbreak-taw39.c9users.io/uwf_api/uwf_api.php?';
+			$get_waypoints_url  = 'http://ec2-18-219-246-128.us-east-2.compute.amazonaws.com/capstone/uwf_api/uwf_api.php?';
 			$get_waypoints_url .= "call={$func}";
 			$get_waypoints_url .= "&key={$key}";
 			$params             = '';

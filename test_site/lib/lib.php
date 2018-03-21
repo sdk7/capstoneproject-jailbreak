@@ -25,7 +25,6 @@
 		$stringDBUsername = NULL,
 		$stringDBPassword = NULL
 	) {
-
 		// Default values so you can just do PDOMYConnect()
 		if(
 			$stringDBHost        !== NULL
