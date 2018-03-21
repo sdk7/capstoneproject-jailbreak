@@ -74,7 +74,7 @@
 		if(isset($_SESSION['users']) && !empty($_SESSION['users']))
 			return ['success' => 'success'];
 		else
-			return ['error' => 'Failed to refresh waypoints'];
+			return ['error' => 'Failed to refresh users'];
 	}
 
 	function verify_user() {
