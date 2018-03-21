@@ -34,6 +34,17 @@
 		return !empty($returnpoints) ? $returnpoints : false;
 	}
 
+	function get_by_id($id = NULL) {
+		$id = is_numeric($id) ? $id : (is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : NULL);
+		if($id === NULL)
+			return false;
+
+		if(is_array($_SESSION['waypoints']))
+			foreach($_SESSION['waypoints'] as $point)
+				if((int)$point['id'] === $id)
+					return $point;
+	}
+
 	function get_all_waypoints() {
 		return $_SESSION['waypoints'];
 	}
