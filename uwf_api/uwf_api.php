@@ -49,7 +49,7 @@
 
 		if(is_array($_SESSION['waypoints']))
 			foreach($_SESSION['waypoints'] as $point)
-				if((int)$point['id'] === $id)
+				if((int)$point['id'] === (int)$id)
 					return $point;
 	}
 
