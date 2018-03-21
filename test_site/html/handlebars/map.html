@@ -1,0 +1,16 @@
+<div id="floating-panel">
+	<b>Start: </b>
+	<select id="start">
+		{{#each start_options}}
+			<option value="{{lat}}, {{long}}">{{bldg_name}}</option>
+		{{/each}}
+	</select>
+	<b>End: </b>
+	<select id="end">
+		{{#each end_options}}
+			<option value="{{lat}}, {{long}}">{{bldg_name}}</option>
+		{{/each}}
+	</select>
+</div>
+<div id="map"></div>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYqafn8cWJIO6sC2waQonAFw-PVqWol7Y&callback=initMap"></script>

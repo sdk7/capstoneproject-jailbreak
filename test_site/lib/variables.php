@@ -16,5 +16,7 @@
     $user = 'JailbreakUser'           ;
     $pass = 'JailbreakPassword'       ;
 
-    $jsPath  = ''     ; 
-    $jsFiles = array(); 
+    $jsPath  = $sitePath . 'js/'; 
+    $jsFiles = [
+        'handlebars-v4.0.11.js'
+    ]; 
