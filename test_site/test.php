@@ -1,7 +1,8 @@
 <?php
 
 	$func = 'get_all_waypoints';
-	$url  = 'http://localhost/capstone/uwf_api/uwf_api.php?';
+	// $url  = 'http://localhost/capstone/uwf_api/uwf_api.php?';
+	$url = 'https://capstone-jailbreak-taw39.c9users.io/uwf_api/uwf_api.php?';
 	$url .= "call={$func}";
 	//$url .= 'functionname[]=' . implode('&functionname[]=' . array_map('urlencode', $func));
 	$params = '';
