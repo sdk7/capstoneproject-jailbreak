@@ -11,61 +11,46 @@
 		$_SESSION['users'] = json_decode(file_get_contents('users.json'), true);
 
 	function get_by_number($num = NULL){
-		if(verify_user()) {
-			$returnpoints = array();
-			$num = strtoupper($num) ?: (strtoupper($_REQUEST['num']) ?: NULL);
+		$returnpoints = array();
+		$num = strtoupper($num) ?: (strtoupper($_REQUEST['num']) ?: NULL);
 
-			if($num === NULL)
-				return false;
+		if($num === NULL)
+			return false;
 
-			if(is_array($_SESSION['waypoints']))
-				foreach($_SESSION['waypoints'] as $point)
-					if(preg_match("/{$num}/", strtoupper($point['building_num'])))
-						array_push($returnpoints,$point);
+		if(is_array($_SESSION['waypoints']))
+			foreach($_SESSION['waypoints'] as $point)
+				if(preg_match("/{$num}/", strtoupper($point['building_num'])))
+					array_push($returnpoints,$point);
 
-			return !empty($returnpoints) ? $returnpoints : false;
-		}
-		else {
-			return [ 'error' => 'invalid key' ];
-		}
+		return !empty($returnpoints) ? $returnpoints : false;
 	}
 
 	function get_by_name($name = NULL) {
-		if(verify_user()) {
-			$returnpoints = array();
-			$name = strtoupper($name) ?: (strtoupper($_REQUEST['name']) ?: NULL);
-			if($name === NULL)
-				return false;
+		$returnpoints = array();
+		$name = strtoupper($name) ?: (strtoupper($_REQUEST['name']) ?: NULL);
+		if($name === NULL)
+			return false;
 
-			if(is_array($_SESSION['waypoints']))
-				foreach($_SESSION['waypoints'] as $point)
-					if(
-						preg_match("/{$name}/",strtoupper($point['alias']))
-						|| preg_match("/{$name}/",strtoupper($point['name']))
-					)
-						array_push($returnpoints,$point);
+		if(is_array($_SESSION['waypoints']))
+			foreach($_SESSION['waypoints'] as $point)
+				if(
+					preg_match("/{$name}/",strtoupper($point['alias']))
+					|| preg_match("/{$name}/",strtoupper($point['name']))
+				)
+					array_push($returnpoints,$point);
 
-			return !empty($returnpoints) ? $returnpoints : false;
-		}
-		else {
-			return [ 'error' => 'invalid key' ];
-		}
+		return !empty($returnpoints) ? $returnpoints : false;
 	}
 
 	function get_by_id($id = NULL) {
-		if(verify_user()) {
-			$id = is_numeric($id) ? $id : (is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : NULL);
-			if($id === NULL)
-				return false;
+		$id = is_numeric($id) ? $id : (is_numeric($_REQUEST['id']) ? $_REQUEST['id'] : NULL);
+		if($id === NULL)
+			return false;
 
-			if(is_array($_SESSION['waypoints']))
-				foreach($_SESSION['waypoints'] as $point)
-					if((int)$point['id'] === $id)
-						return $point;
-		}
-		else {
-			return [ 'error' => 'invalid key' ];
-		}
+		if(is_array($_SESSION['waypoints']))
+			foreach($_SESSION['waypoints'] as $point)
+				if((int)$point['id'] === $id)
+					return $point;
 	}
 
 	function get_all_waypoints() {
@@ -99,9 +84,14 @@
 	}
 
 	if(isset($_REQUEST['call'])) {
-		if(is_array($_REQUEST['call']))
-			foreach($_REQUEST['call'] as $function)
-				echo json_encode($function());
-		else
-			echo json_encode($_REQUEST['call']());
+		if(verify_user()) {
+			if(is_array($_REQUEST['call']))
+				foreach($_REQUEST['call'] as $function)
+					echo json_encode($function());
+			else
+				echo json_encode($_REQUEST['call']());
+		}
+		else {
+			echo json_encode(['error'=>'invalid key']);
+		}
 	}
