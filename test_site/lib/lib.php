@@ -79,10 +79,12 @@
 		$files      = scandir(__DIR__ . '/../' . $dir) ;
 
 		// Already hardcoded in
-		$hardcodedjs = 'main.js';
-		if(($key = array_search($hardcodedjs, $files)) !== false) unset($files[$key]);
-		$hardcodedjs = 'handlebars-v4.0.11.js';
-		if(($key = array_search($hardcodedjs, $files)) !== false) unset($files[$key]);
+		$hardcodedjs = [
+			'main.js',
+			'handlebars-v4.0.11.js'
+		];
+		foreach($hardcodedjs as $js)
+			if(($key = array_search($js, $files)) !== false) unset($files[$key]);
 
 		foreach($files as $file)
 			if($file != '.' && $file != '..')
@@ -130,14 +132,17 @@
 		echo json_encode($filesArray);
 	}
 
-	// @HACK
-	// When calling from js with a post variable functionname
-	// run each functionname. This is actually just cancer.
-	// If this goes anywhere find a better way to do this
 	if(!empty($_POST['functionname'])) {
-		if(is_array($_POST['functionname']))
-			foreach($_POST['functionname'] as $function)
-				$function();
-		else
-			$_POST['functionname']();
+		if(is_array($_POST['functionname'])) {
+			foreach($_POST['functionname'] as $function) {
+				if(array_search($function,get_defined_functions()['user'])) {
+					$function();
+				}
+			}
+		}
+		else {
+			if(array_search($_POST['functionname'],get_defined_functions()['user'])) {
+				$_POST['functionname']();
+			}
+		}
 	}

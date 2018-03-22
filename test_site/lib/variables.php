@@ -10,8 +10,8 @@
 	(defined('CR')) ?: define('CR',"\r\n"); // Carriage Returns
 
 	/* Variables */
-	$host = '';
+	$host = 'host.com';
 	$port = '5432';
-	$db   = 'dbname=ScavengerDatabase';
-	$user = 'JailbreakUser';
-	$pass = 'JailbreakPassword';
+	$db   = 'postgres';
+	$user = 'username';
+	$pass = 'secretpass';

@@ -37,12 +37,17 @@
 		}
 	}
 
-	// When calling from js with a post variable functionname
-	// run each functionname
 	if(!empty($_POST['functionname'])) {
-		if(is_array($_POST['functionname']))
-			foreach($_POST['functionname'] as $function)
-				$function();
-		else
-			$_POST['functionname']();
+		if(is_array($_POST['functionname'])) {
+			foreach($_POST['functionname'] as $function) {
+				if(array_search($function,get_defined_functions()['user'])) {
+					$function();
+				}
+			}
+		}
+		else {
+			if(array_search($_POST['functionname'],get_defined_functions()['user'])) {
+				$_POST['functionname']();
+			}
+		}
 	}
