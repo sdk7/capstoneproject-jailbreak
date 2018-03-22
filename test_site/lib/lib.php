@@ -135,13 +135,13 @@
 	if(!empty($_POST['functionname'])) {
 		if(is_array($_POST['functionname'])) {
 			foreach($_POST['functionname'] as $function) {
-				if(array_search($function,get_defined_functions()['user'])) {
+				if(array_search($function,get_defined_functions()['user']) !== false) {
 					$function();
 				}
 			}
 		}
 		else {
-			if(array_search($_POST['functionname'],get_defined_functions()['user'])) {
+			if(array_search($_POST['functionname'],get_defined_functions()['user']) !== false) {
 				$_POST['functionname']();
 			}
 		}

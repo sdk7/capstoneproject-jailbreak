@@ -95,7 +95,7 @@
 		if(verify_user()) {
 			if(is_array($_REQUEST['call'])) {
 				foreach($_REQUEST['call'] as $function) {
-					if(array_search($function,get_defined_functions()['user'])) {
+					if(array_search($function,get_defined_functions()['user']) !== false) {
 						echo json_encode($function());
 					}
 					else {
@@ -104,7 +104,7 @@
 				}
 			}
 			else {
-				if(array_search($_REQUEST['call'],get_defined_functions()['user'])) {
+				if(array_search($_REQUEST['call'],get_defined_functions()['user']) !== false) {
 					echo json_encode($_REQUEST['call']());
 				}
 				else {
