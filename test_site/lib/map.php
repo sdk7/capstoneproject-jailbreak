@@ -20,7 +20,8 @@
 				$insert_point = [
 					'bldg_name' => $point['name'],
 					'lat'       => $point['coordinates'][1],
-					'long'      => $point['coordinates'][0]
+					'long'      => $point['coordinates'][0],
+					'alias'     => $point['alias'],
 				];
 				array_push($start_options,$insert_point);
 				array_push($end_options,$insert_point);

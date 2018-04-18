@@ -6,4 +6,5 @@
     
     $urlcontents = file_get_contents($urlstring);
     $response = json_decode($urlcontents, true);
-    var_dump ($response ["routes"][0]["legs"][0]["steps"]);
+    //var_dump ($response ["routes"][0]["legs"][0]["steps"]);
+   

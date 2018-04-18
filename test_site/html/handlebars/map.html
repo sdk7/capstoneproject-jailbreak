@@ -1,16 +1,26 @@
 <div id="floating-panel">
 	<b>Start: </b>
-	<select id="start">
+	<select id="start" onchange="updateCurrentPosition()">
+		<option id="current_location_option" value="0,0">Current Location</option>
 		{{#each start_options}}
 			<option value="{{lat}}, {{long}}">{{bldg_name}}</option>
 		{{/each}}
 	</select>
 	<b>End: </b>
-	<select id="end">
-		{{#each end_options}}
+	<select id="end" onchange="updateCurrentPosition()">
+		{{#each end_options}} 
 			<option value="{{lat}}, {{long}}">{{bldg_name}}</option>
 		{{/each}}
 	</select>
+	<button class="update-route-btn">Update Route</button>
 </div>
+<datalist id="places">
+    {{#each start_options}}
+        <option value="{{bldg_name}}"></option>
+        {{#if alias}}
+        <option value="{{alias}}"></option>
+        {{/if}}
+    {{/each}}
+</datalist>
 <div id="map"></div>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYqafn8cWJIO6sC2waQonAFw-PVqWol7Y&callback=initMap"></script>
