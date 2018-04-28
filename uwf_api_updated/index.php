@@ -11,12 +11,18 @@
     $request['OBJECTS']  = $req_str;
 
 
+    require_once(__DIR__ . '/' . $request['VERSION'] . '/' . 'lib.php');
     require_once(__DIR__ . '/' . $request['VERSION'] . '/' . 'GET.php');
     // require_once(__DIR__ . '/' . LIB . '/' . 'PUT.php');
     // require_once(__DIR__ . '/' . LIB . '/' . 'POST.php');
     // require_once(__DIR__ . '/' . LIB . '/' . 'DELETE.php');
 
-    if( !$request['KEY'] || !verify_key($request['KEY'])) {
+    $db = connect_db();
+
+    if(!isset($_SERVER['users']) || empty($_SERVER['users']))
+        store_users($db);
+
+    if( !$request['KEY'] || !verify_key($request['KEY'],$_SERVER['users'])) {
         echo json_encode(['error'=>'invalid key']);
     } else if( !$request['PROTOCOL'] || !in_array($request['PROTOCOL'],['GET','POST','PUT','DELETE'])) {
         echo json_encode(['error'=>'invalid protocol']);
@@ -28,13 +34,13 @@
                 echo json_encode(get_objects($request['OBJECTS'])); // GET.php
                 break;
             case 'PUT':
-                echo json_encode(update($request,$_POST)); // PUT.php
+                // echo json_encode(update($request,$_POST)); // PUT.php
                 break;
             case 'POST':
-                echo json_encode(create($request,$_POST)); // POST.php
+                // echo json_encode(create($request,$_POST)); // POST.php
                 break;
             case 'DELETE':
-                echo json_encode(del_objects($request,$_POST)); // DELETE.php
+                // echo json_encode(del_objects($request,$_POST)); // DELETE.php
                 break;
         }
     }
