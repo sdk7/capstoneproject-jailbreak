@@ -29,7 +29,7 @@
     $db = connect_db();
 
     if(!isset($_SERVER['users']) || empty($_SERVER['users']))
-        store_users($db);
+        $_SERVER['users'] = store_users($db);
 
     if( !$request['KEY'] || !verify_key($request['KEY'],$_SERVER['users'])) {
         echo json_encode(['error'=>'invalid key']);
@@ -40,7 +40,8 @@
     } else {
         switch($request['PROTOCOL']) {
             case 'GET':
-                echo json_encode(get_objects($request['OBJECTS'])); // GET.php
+                $ret = get_objects($_request['OBJECTS']);
+                echo (empty($ret)) ?: $ret;
                 break;
             case 'PUT':
                 // echo json_encode(update($request,$_POST)); // PUT.php
