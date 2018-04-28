@@ -40,8 +40,8 @@
     } else {
         switch($request['PROTOCOL']) {
             case 'GET':
-                $ret = get_objects($_request['OBJECTS']);
-                echo (empty($ret)) ?: $ret;
+                $ret = get_objects($request['OBJECTS']);
+                echo (empty($ret)) ?: json_encode($ret);
                 break;
             case 'PUT':
                 // echo json_encode(update($request,$_POST)); // PUT.php
