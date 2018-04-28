@@ -4,11 +4,20 @@
 
     // Request looks like server.com/v1.0.0/apikey/GET/object1/key1/object2/key2/...
     // $_SERVER['REQUEST_URI'] = '/v1.0.0/apikey/GET/object1/key1/object2/key2/...'
-    $req_str             = array_filter(explode('/',$_SERVER['REQUEST_URI']));
-    $request['VERSION']  = array_shift($req_str);
-    $request['KEY']      = array_shift($req_str);
-    $request['PROTOCOL'] = array_shift($req_str);
-    $request['OBJECTS']  = $req_str;
+
+    // ! Debugging purposes
+    if($_SERVER['REQUEST_URI'] === '/reset_all') {
+        unset($_SERVER['users']);
+        unset($_SERVER['rooms']);
+        unset($_SERVER['buildings']);
+    }
+    else {
+        $req_str             = array_filter(explode('/',$_SERVER['REQUEST_URI']));
+        $request['VERSION']  = array_shift($req_str);
+        $request['KEY']      = array_shift($req_str);
+        $request['PROTOCOL'] = array_shift($req_str);
+        $request['OBJECTS']  = $req_str;
+    }
 
 
     require_once(__DIR__ . '/' . $request['VERSION'] . '/' . 'lib.php');

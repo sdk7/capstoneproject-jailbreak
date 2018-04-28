@@ -24,7 +24,7 @@
     }
 
     function store_rooms($dbc) {
-        $sql = "SELECT r.building_id::TEXT, a.x->>'room_num' AS room_num, a.x::TEXT AS info FROM rooms r, json_array_elements(r.rooms) a(x)";
+        $sql = "SELECT r.building_num::TEXT, a.x->>'room_num' AS room_num, a.x::TEXT AS info FROM rooms r, json_array_elements(r.rooms) a(x)";
 
         $run = $dbc->prepare($sql);
         $run->execute();
@@ -32,7 +32,7 @@
         $ret = array();
 
         foreach($vals as $k => $v)
-            $ret[$v['building_id']][$v['room_num']] = json_decode($v['info']);
+            $ret[$v['building_num']][$v['room_num']] = json_decode($v['info']);
 
         return $ret;
     }
