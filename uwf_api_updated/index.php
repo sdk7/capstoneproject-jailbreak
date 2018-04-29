@@ -25,13 +25,15 @@
         http_response_code(400);
         die();
     }
+    
+    if( !isset($request['PROTOCOL']) || !in_array($request['PROTOCOL'],['GET','POST','PUT','DELETE'])) {
+        echo json_encode(['errpr' => 'invalid protocol']);
+        http_response_code(400);
+        die();
+    }
 
     require_once(__DIR__ . '/' . $request['VERSION'] . '/' . 'lib.php');
-    require_once(__DIR__ . '/' . $request['VERSION'] . '/' . 'GET.php');
-    // TODO Implement other protocols
-    // require_once(__DIR__ . '/' . LIB . '/' . 'PUT.php');
-    // require_once(__DIR__ . '/' . LIB . '/' . 'POST.php');
-    // require_once(__DIR__ . '/' . LIB . '/' . 'DELETE.php');
+    require_once(__DIR__ . '/' . $request['VERSION'] . '/' . $request['PROTOCOL'] . '.php');
 
     $db = connect_db();
 
@@ -41,10 +43,6 @@
     if( !$request['KEY'] || !verify_key($request['KEY'],$_SERVER['users'])) {
         echo json_encode(['error'=>'invalid key']);
         http_response_code(401);
-        die();
-    } else if( !$request['PROTOCOL'] || !in_array($request['PROTOCOL'],['GET','POST','PUT','DELETE'])) {
-        echo json_encode(['error'=>'invalid protocol']);
-        http_response_code(400);
         die();
     } else if(empty($request['OBJECTS'])) {
         echo json_encode(['error'=>'invalid object(s)']);
