@@ -14,7 +14,7 @@
     session_start();
 
     $req_str             = array_filter(explode('/',$_SERVER['REQUEST_URI']));
-    array_shift($req_str); // ! Get rid of before going to production
+    array_shift($req_str);
     $request['VERSION']  = array_shift($req_str);
     $request['KEY']      = array_shift($req_str);
     $request['PROTOCOL'] = array_shift($req_str);
@@ -27,7 +27,7 @@
     }
     
     if( !isset($request['PROTOCOL']) || !in_array($request['PROTOCOL'],['GET','POST','PUT','DELETE'])) {
-        echo json_encode(['errpr' => 'invalid protocol']);
+        echo json_encode(['error' => 'invalid protocol']);
         http_response_code(400);
         die();
     }

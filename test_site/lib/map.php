@@ -2,13 +2,9 @@
 	function getlocations() {
 		// Where we would call API
 		if(!isset($_SESSION['waypoints']) || $_SESSION['waypoints'] === NULL) {
-			$func               = 'get_all_waypoints';
-			$key                = 'apikeygoeshere';
-			// $get_waypoints_url  = 'https://capstone-jailbreak-taw39.c9users.io/uwf_api/uwf_api.php?';
-			$get_waypoints_url  = 'http://ec2-18-219-246-128.us-east-2.compute.amazonaws.com/capstone/uwf_api/uwf_api.php?';
-			$get_waypoints_url .= "call={$func}";
-			$get_waypoints_url .= "&key={$key}";
-			$params             = '';
+			$api_version = 'v1.0.0';
+			$api_key     = 'apikeygoeshere';
+			$get_waypoints_url  = "http://ec2-18-219-246-128.us-east-2.compute.amazonaws.com/index.php/{$api_version}/{$api_key}/GET/buildings";
 
 			$_SESSION['waypoints'] = json_decode(file_get_contents($get_waypoints_url),true);
 		}
@@ -19,8 +15,8 @@
 
 				$insert_point = [
 					'bldg_name' => $point['name'],
-					'lat'       => $point['coordinates'][1],
-					'long'      => $point['coordinates'][0],
+					'lat'       => $point['latitude'],
+					'long'      => $point['longitude'],
 					'alias'     => $point['alias'],
 				];
 				array_push($start_options,$insert_point);

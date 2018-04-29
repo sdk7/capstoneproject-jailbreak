@@ -52,7 +52,6 @@
 	}
 	
 	function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-		console.log(document.getElementById('start').value);
 		directionsService.route({
 			origin: document.getElementById('start').value,
 			destination: document.getElementById('end').value,

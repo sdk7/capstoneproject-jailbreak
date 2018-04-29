@@ -1,13 +1,11 @@
 <div id="floating-panel">
 	<b>Start: </b>
-	<input list="places" id="start" name="browser">
-	<select id="startx" onchange="updateCurrentPosition()">
+	<select id="start" onchange="updateCurrentPosition()">
 		<option id="current_location_option" value="0,0">Current Location</option>
 		{{#each start_options}}
 			<option value="{{lat}}, {{long}}">{{bldg_name}}</option>
 		{{/each}}
 	</select>
-	<input type="submit">
 	<b>End: </b>
 	<select id="end" onchange="updateCurrentPosition()">
 		{{#each end_options}} 
@@ -16,13 +14,5 @@
 	</select>
 	<button class="update-route-btn">Update Route</button>
 </div>
-<datalist id="places">
-    {{#each start_options}}
-        <option value="{{bldg_name}}">{{lat}}, {{long}}</option>
-        {{#if alias}}
-        <option value="{{alias}}">{{lat}}, {{long}}</option>
-        {{/if}}
-    {{/each}}
-</datalist>
 <div id="map"></div>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYqafn8cWJIO6sC2waQonAFw-PVqWol7Y&callback=initMap"></script>
