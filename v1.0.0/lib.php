@@ -1,10 +1,16 @@
 <?php
 
-    // $user = 'JailbreakAdmin';
-    // $pass = 'JailbreakPassword';
-    // $host = "pgsql:host=scavengerdatabase.c86huxufzw7q.us-east-2.rds.amazonaws.com;port=5432;dbname=ScavengerDatabase";
+    $user = 'JailbreakAdmin';
+    $pass = 'JailbreakPassword';
+    $host = "pgsql:host=scavengerdatabase.c86huxufzw7q.us-east-2.rds.amazonaws.com;port=5432;dbname=ScavengerDatabase";
 
-    function connect_db($host_string = 'pgsql:host=scavengerdatabase.c86huxufzw7q.us-east-2.rds.amazonaws.com;port=5432;dbname=capstone', $username = 'JailbreakAdmin', $password = 'JailbreakPassword') {
+    function connect_db($host_string = NULL, $username = NULL, $password = NULL) {
+        global $user, $pass, $host;
+
+        $host_string = (!empty($host_string)) ? $host_string : $host;
+        $username    = (!empty($username))    ? $username    : $user;
+        $password    = (!empty($password))    ? $password    : $pass;
+
         try {
             $pdo = new PDO(
                 $host_string,
@@ -47,7 +53,7 @@
 
         $key = $username . '_' . (($key) ?: generate_random_string());
         $user = array('username' => $username, 'key' => $key);
-        
+
         $run = $dbc->prepare($sql);
         $run->bindParam(':username',$username,PDO::PARAM_STR);
         $run->bindParam(':key',$key,PDO::PARAM_STR);
@@ -56,7 +62,7 @@
 
         return $user;
     }
-    
+
     // https://gist.github.com/irazasyed/5382685
     function generate_random_string($type = 'alphanum', $length = 8) {
         switch($type) {
@@ -71,9 +77,9 @@
                     $seedings['alphanum'] = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                     $seedings['num']      = '0123456789';
                     $seedings['nozero']   = '123456789';
-                    
+
                     $pool = $seedings[$type];
-                    
+
                     $str = '';
                     for ($i=0; $i < $length; $i++)
                     {
@@ -102,7 +108,7 @@
             WHERE
                 key = :u_key
         ";
-        
+
         $run = $dbc->prepare($sql);
         $run->bindParam(':u_key',$key,PDO::PARAM_STR);
         $run->execute();
