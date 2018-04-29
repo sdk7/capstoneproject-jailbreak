@@ -8,10 +8,3 @@
 
 	/* Defines */
 	(defined('CR')) ?: define('CR',"\r\n"); // Carriage Returns
-
-	/* Variables */
-	$host = 'host.com';
-	$port = '5432';
-	$db   = 'postgres';
-	$user = 'username';
-	$pass = 'secretpass';
