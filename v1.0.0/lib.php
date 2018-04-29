@@ -40,29 +40,52 @@
     function create_user($dbc, $username, $key = NULL, $extra = NULL) {
         $sql = "
             INSERT INTO
-                uwf_users u (username, key, extra)
+                uwf_users (username, key, extra)
             VALUES
-                (':username', ':key'," . ($extra) ? "':extra'::JSON" : "''" .");
+                (:username, :key," .(($extra) ? "(:extra)::JSON" : "'{}'::JSON").");
         ";
 
-        $key = $username . '_' . ($key) ?: generate_random_string();
-
-        $run = $dbc->prepare();
+        $key = $username . '_' . (($key) ?: generate_random_string());
+        $user = array('username' => $username, 'key' => $key);
+        
+        $run = $dbc->prepare($sql);
         $run->bindParam(':username',$username,PDO::PARAM_STR);
         $run->bindParam(':key',$key,PDO::PARAM_STR);
         if(!empty($extra)) $run->bindParam(':extra',json_encode($extra),PDO::PARAM_STR);
         $run->execute();
 
-        return [$username => $key];
+        return $user;
     }
-
-    function generate_random_string($length = 10) {
-        $nps = "";
-        for($i=0;$i<$length;$i++)
-        {
-            $nps .= chr( (mt_rand(1, 36) <= 26) ? mt_rand(97, 122) : mt_rand(48, 57 ));
+    
+    // https://gist.github.com/irazasyed/5382685
+    function generate_random_string($type = 'alphanum', $length = 8) {
+        switch($type) {
+            case 'basic'    : return mt_rand();
+                break;
+            case 'alpha'    :
+            case 'alphanum' :
+            case 'num'      :
+            case 'nozero'   :
+                    $seedings             = array();
+                    $seedings['alpha']    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    $seedings['alphanum'] = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    $seedings['num']      = '0123456789';
+                    $seedings['nozero']   = '123456789';
+                    
+                    $pool = $seedings[$type];
+                    
+                    $str = '';
+                    for ($i=0; $i < $length; $i++)
+                    {
+                        $str .= substr($pool, mt_rand(0, strlen($pool) -1), 1);
+                    }
+                    return $str;
+                break;
+            case 'unique'   :
+            case 'md5'      :
+                        return md5(uniqid(mt_rand()));
+                break;
         }
-        return $nps;
     }
 
     function is_admin($dbc,$key) {

@@ -5,7 +5,7 @@
 			$api_version = 'v1.0.0';
 			$api_key     = 'apikeygoeshere';
 			$get_waypoints_url  = "http://ec2-18-219-246-128.us-east-2.compute.amazonaws.com/index.php/{$api_version}/{$api_key}/GET/buildings";
-
+			
 			$_SESSION['waypoints'] = json_decode(file_get_contents($get_waypoints_url),true);
 		}
 		$start_options = array();

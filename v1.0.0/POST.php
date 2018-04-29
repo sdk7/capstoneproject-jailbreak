@@ -65,18 +65,18 @@ SQL;
             case 'buildings':
                 $sql = "UPDATE uwf_buildings SET id = id";
                 foreach($info as $k => $v) {
-                    if($k !== 'latitude' || $k !== 'longitude' || $k !== 'extra') {
-                        $sql .= ", {$k} = ':{$k}";
+                    if($k != 'latitude' || $k != 'longitude' || $k != 'extra') {
+                        $sql .= ", {$k} = (:{$k})";
                     } else if ($k === 'extra') {
-                        $sql .= ", {$k} = :{$k}::JSON";
+                        $sql .= ", {$k} = (:{$k})::JSON";
                     } else {
-                        $sql .= ", {$k} = :{$k}::NUMERIC";
+                        $sql .= ", {$k} = (:{$k})::NUMERIC";
                     }
                 }
-                $sql .= " WHERE building_num = :bldg_id";
-
+                $sql .= " WHERE number = :bldg_id";
+                
                 $run = $db->prepare($sql);
-                foreach($info as $k => $v)
+                foreach($info as $k => &$v)
                     $run->bindParam(":{$k}",$v,PDO::PARAM_STR);
                 $run->bindParam(':bldg_id',$obj_id,PDO::PARAM_STR);
                 $run->execute();

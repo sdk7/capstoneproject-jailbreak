@@ -22,22 +22,22 @@
                     DO
                         UPDATE
                         SET
-                            rooms = (rooms::JSONB || (:info)::JSONB)::JSON
+                            rooms = (rooms.rooms::JSONB || (:info)::JSONB)::JSON
                         WHERE
-                            building_num = :bldg_id;
+                            rooms.building_num = :bldg_id;
                 ";
 
                 $run = $db->prepare($sql_upsert);
                 $run->bindParam(':bldg_id',$bldg_id,PDO::PARAM_STR);
-                $run->bindParam(':info',json_encode($info),PDO::PARAM_STR);
+                $run->bindParam(':info',$info['room_info'],PDO::PARAM_STR);
                 $run->execute();
 
-                return [$bldg_id => json_encode($info)];
+                return [$bldg_id => $info];
                 break;
             case 'buildings':
                 $sql_insert = "
                     INSERT INTO
-                        buildings(name, alias,number,type,latitude,longitude,extra,deleted)
+                        uwf_buildings(name, alias,number,type,latitude,longitude,extra,deleted)
                     VALUES
                         (
                             :name,
@@ -65,9 +65,10 @@
             case 'users':
                 $name = $info['username'];
                 $key = (empty($info['key'])) ? NULL : $info['key'];
-                $extra (empty($info['extra'])) ? NULL : $info['extra'];
-                create_user($db,$name,$key,$extra);
-
-                return [$name => $key];
+                $extra = (empty($info['extra'])) ? NULL : $info['extra'];
+                $ret = create_user($db,$name,$key,$extra);
+                
+                return $ret;
+                break;
         }
     }

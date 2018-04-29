@@ -20,7 +20,7 @@
 
     session_start();
 
-    $req_str             = array_filter(explode('/',$_SERVER['REQUEST_URI']));
+    $req_str             = array_filter(explode('/',$_SERVER['REQUEST_URI']), 'strlen');
     array_shift($req_str);
     $request['VERSION']  = array_shift($req_str);
     $request['KEY']      = array_shift($req_str);
@@ -79,7 +79,7 @@
                 if(is_admin($db,$request['KEY'])) {
                     $ret = create($request['OBJECTS'],$_POST);
                     echo (empty($ret)) ? '' : json_encode($ret);
-                    http_response_code((empty($ret)) ? 400 : 200);
+                    http_response_code((empty($ret)) ? 400 : 201);
                 }
                 else {
                     echo json_encode(['error'=>'invalid permissions']);
