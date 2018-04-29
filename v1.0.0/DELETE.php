@@ -1,22 +1,37 @@
 <?php
+/**
+ * UWF Map API - DELETE Protocol
+ *
+ * Holds all of what is needed for whenever a DELETE is called in the request
+ *
+ * @version: v1.0.0
+ * @author:  Tyler Webb
+ * @date:    2018-04-29
+ * @info:    Capstone Spring 2018
+ */
 
     require_once('lib.php');
     $db = connect_db();
 
-    $_SERVER['REFRESH'] = true;
-
+    /**
+     * Given an object and it's path delete it from the database and set API to refresh information on next call
+     *
+     * @param obj The array of objects to delete
+     *
+     * @return array An array of the building being affected and what was changed
+     */
     function delete($obj) {
         global $db;
 
         if(count($obj) % 2 === 1) return; // Objects need keys
-        
+
         $obj_id = array_pop($obj);
         $obj_type = array_pop($obj);
 
         switch($obj_type) {
             case 'rooms':
                 if(empty($obj)) return; // Rooms need a building
-                $bldg_id = array_pop($obj);
+                $bldg_id = array_pop($obj); // Should be building number
                 $sql = "
                     UPDATE
                         rooms r
@@ -47,14 +62,16 @@
                         AND r.building_num = r2.building_num
                         AND json_array_length(r2.rooms) < json_array_length(r.rooms);
                 ";
-                
+
                 $run = $db->prepare($sql);
                 $run->bindParam(':bldg_id',$bldg_id,PDO::PARAM_STR);
                 $run->bindParam(':room_num',$obj_id,PDO::PARAM_STR);
                 $run->execute();
 
+                $_SERVER['REFRESH'] = true;
                 return [$bldg_id => $obj_id];
                 break;
+
             case 'buildings':
                 $sql = "
                     DELETE FROM uwf_buildings
@@ -65,6 +82,7 @@
                 $run->bindParam(':bldg_id',$obj_id,PDO::PARAM_STR);
                 $run->execute();
 
+                $_SERVER['REFRESH'] = true;
                 return [$obj_type => $obj_id];
                 break;
         }

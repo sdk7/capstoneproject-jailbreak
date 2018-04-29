@@ -1,9 +1,26 @@
 <?php
+/**
+ * UWF Map API - PUT
+ *
+ * Creates functions that handle all of the API PUT protocol requests
+ *
+ * @version: v1.0.0
+ * @author:  Tyler Webb
+ * @date:    2018-04-29
+ * @info:    Capstone Spring 2018
+ */
 
     require_once('lib.php');
     $db = connect_db();
-    $_SERVER['REFRESH'] = true;
 
+    /**
+     * Given an object type and what's going to be saved we create the records in the database
+     *
+     * @param obj The object type
+     * @param info The information we're storing
+     *
+     * @return array What we've saved to the database
+     */
     function create($obj,$info) {
         global $db;
 
@@ -11,7 +28,9 @@
 
         switch($obj_type) {
             case 'rooms':
-                if(empty($obj)) return;
+                // Creates a new rooms record or updates an existing building by just appending to
+                // the end of the rooms JSON array. Unfortunately doesn't check whether the room exists already.
+                if(empty($obj)) return; // Rooms need a building_num to attach to
                 $bldg_id = array_pop($obj);
                 $sql_upsert = "
                     INSERT INTO
@@ -32,9 +51,11 @@
                 $run->bindParam(':info',$info['room_info'],PDO::PARAM_STR);
                 $run->execute();
 
+                $_SERVER['REFRESH'] = true;
                 return [$bldg_id => $info];
                 break;
             case 'buildings':
+                // Insert building into uwf_buildings unless number already exists then do nothing
                 $sql_insert = "
                     INSERT INTO
                         uwf_buildings(name, alias,number,type,latitude,longitude,extra,deleted)
@@ -60,14 +81,18 @@
                 $run->bindParam(':extra',$info['extra'],PDO::PARAM_STR);
                 $run->execute();
 
+                $_SERVER['REFRESH'] = true;
                 return ['BLDG' => json_encode($info)];
                 break;
             case 'users':
-                $name = $info['username'];
-                $key = (empty($info['key'])) ? NULL : $info['key'];
+                // Creates a user and returns their username and key
+                $name  = $info['username'];
+                $key   = (empty($info['key'])) ? NULL : $info['key'];
                 $extra = (empty($info['extra'])) ? NULL : $info['extra'];
-                $ret = create_user($db,$name,$key,$extra);
-                
+
+                $ret   = create_user($db,$name,$key,$extra);
+
+                $_SERVER['REFRESH'] = true;
                 return $ret;
                 break;
         }
