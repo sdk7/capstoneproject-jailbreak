@@ -3,10 +3,10 @@
     require_once('lib.php');
     $db = connect_db();
 
-    if(!isset($_SERVER['buildings']) || empty($_SERVER['buildings']))
+    if(!isset($_SERVER['buildings']) || empty($_SERVER['buildings']) || $_SERVER['REFRESH'])
         $_SERVER['buildings'] = store_buildings($db);
 
-    if(!isset($_SERVER['rooms']) || empty($_SERVER['rooms']))
+    if(!isset($_SERVER['rooms']) || empty($_SERVER['rooms']) || $_SERVER['REFRESH'])
         $_SERVER['rooms'] = store_rooms($db);
 
     function store_buildings($dbc) {
@@ -68,3 +68,5 @@
             }
         }
     }
+
+    $_SERVER['REFRESH'] = false;
