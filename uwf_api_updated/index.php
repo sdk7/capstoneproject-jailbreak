@@ -15,7 +15,6 @@
 
     $req_str             = array_filter(explode('/',$_SERVER['REQUEST_URI']));
     array_shift($req_str); // ! Get rid of before going to production
-    array_shift($req_str); // ! Get rid of before going to production
     $request['VERSION']  = array_shift($req_str);
     $request['KEY']      = array_shift($req_str);
     $request['PROTOCOL'] = array_shift($req_str);
@@ -23,6 +22,7 @@
     
     if(!is_dir(__DIR__ . '/' . $request['VERSION'])) {
         echo json_encode(['error' => 'invalid version: ' . $request['VERSION']]);
+        http_response_code(400);
         die();
     }
 
@@ -40,18 +40,22 @@
 
     if( !$request['KEY'] || !verify_key($request['KEY'],$_SERVER['users'])) {
         echo json_encode(['error'=>'invalid key']);
+        http_response_code(401);
         die();
     } else if( !$request['PROTOCOL'] || !in_array($request['PROTOCOL'],['GET','POST','PUT','DELETE'])) {
         echo json_encode(['error'=>'invalid protocol']);
+        http_response_code(400);
         die();
     } else if(empty($request['OBJECTS'])) {
         echo json_encode(['error'=>'invalid object(s)']);
+        http_response_code(400);
         die();
     } else {
         switch($request['PROTOCOL']) {
             case 'GET':
                 $ret = get_objects($request['OBJECTS']);
                 echo (empty($ret)) ? '' : json_encode($ret);
+                if(empty($ret)) http_response_code(400);
                 break;
             case 'PUT':
                 // echo json_encode(update($request,$_POST)); // PUT.php
