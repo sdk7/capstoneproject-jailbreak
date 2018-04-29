@@ -21,34 +21,46 @@
     UPDATE
         rooms r
     SET
-        rooms = (r2.rooms::JSONB || ':room_info'::JSONB)::JSON
+        rooms = (r2.rooms::JSONB || (:room_info)::JSONB)::JSON
     FROM (
-        SELECT
-            r3.building_num,
-            array_to_json(array_agg(elem)) AS rooms
-        FROM
-            rooms r3,
-            json_array_elements(r3.rooms) elem
-        WHERE 1=1
-            AND r3.building_num = ':bldg_id'
-            AND elem->>'room_num' != ':room_num'
-        GROUP BY
-            1
-    ) r2
+        VALUES
+            (
+                :bldg_id,
+                COALESCE (
+                    (
+                        SELECT rooms
+                        FROM (
+                            SELECT
+                                r3.building_num,
+                                array_to_json(array_agg(elem)) AS rooms
+                            FROM
+                                rooms r3,
+                                json_array_elements(r3.rooms) elem
+                            WHERE 1=1
+                                AND r3.building_num = :bldg_id
+                                AND elem->>'room_num' != :room_num
+                            GROUP BY
+                                1
+                        ) y
+                    ),
+                    ('[]'::JSON)
+                )
+            )
+    ) r2 (building_num, rooms)
     WHERE 1=1
-        AND r.building_num = ':bldg_id'
+        AND r.building_num = :bldg_id
         AND r.building_num = r2.building_num
         AND json_array_length(r2.rooms) < json_array_length(r.rooms);
 SQL;
 
                 $run = $db->prepare($sql);
-                $run->bindParam(':room_info',json_encode($info),PDO::PARAM_STR);
+                $run->bindParam(':room_info',$info['room_info'],PDO::PARAM_STR);
                 $run->bindParam(':room_num',$info['room_num'],PDO::PARAM_STR);
                 $run->bindParam(':bldg_id',$bldg_id,PDO::PARAM_STR);
                 $run->execute();
                 $run = NULL;
 
-                return [$bldg_id => json_encode($info)];
+                return [$bldg_id => $info['room_info']];
                 break;
             case 'buildings':
                 $sql = "UPDATE uwf_buildings SET id = id";
@@ -56,9 +68,9 @@ SQL;
                     if($k !== 'latitude' || $k !== 'longitude' || $k !== 'extra') {
                         $sql .= ", {$k} = ':{$k}";
                     } else if ($k === 'extra') {
-                        $sql .= ", {$k} = ':{$k}'::JSON";
+                        $sql .= ", {$k} = :{$k}::JSON";
                     } else {
-                        $sql .= ", {$k} = ':{$k}'::NUMERIC";
+                        $sql .= ", {$k} = :{$k}::NUMERIC";
                     }
                 }
                 $sql .= " WHERE building_num = :bldg_id";

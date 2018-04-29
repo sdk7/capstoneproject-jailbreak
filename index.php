@@ -11,6 +11,7 @@
  *      201 Created
  *      204 Empty Content
  *      400 Bad Request
+ *      401 Unauthorized
  *
  * @authors: Tyler Webb, Stewart Kaminer, Alexander Oldaker
  * @date: 2018-04-28
@@ -63,23 +64,38 @@
                 http_response_code((empty($ret)) ? 400 : 200);
                 break;
             case 'POST':
-                if(is_admin($request['KEY'])) {
+                if(is_admin($db,$request['KEY'])) {
                     $ret = update($request['OBJECTS'],$_POST);
                     echo (empty($ret)) ? '' : json_encode($ret);
                     http_response_code((empty($ret)) ? 400 : 200);
                 }
+                else {
+                    echo json_encode(['error'=>'invalid permissions']);
+                    http_response_code(401);
+                    die();
+                }
                 break;
             case 'PUT':
-                if(is_admin($request['KEY'])) {
+                if(is_admin($db,$request['KEY'])) {
                     $ret = create($request['OBJECTS'],$_POST);
                     echo (empty($ret)) ? '' : json_encode($ret);
                     http_response_code((empty($ret)) ? 400 : 200);
                 }
+                else {
+                    echo json_encode(['error'=>'invalid permissions']);
+                    http_response_code(401);
+                    die();
+                }
                 break;
             case 'DELETE':
-                if(is_admin($request['KEY'])) {
+                if(is_admin($db,$request['KEY'])) {
                     $ret = delete($request['OBJECTS']);
                     http_response_code((empty($ret)) ? 400 : 204);
+                }
+                else {
+                    echo json_encode(['error'=>'invalid permissions']);
+                    http_response_code(401);
+                    die();
                 }
                 break;
         }

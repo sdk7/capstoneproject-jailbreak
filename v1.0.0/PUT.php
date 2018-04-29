@@ -17,14 +17,14 @@
                     INSERT INTO
                         rooms(building_num,rooms)
                     VALUES
-                            (':bldg_id',':info'::JSON)
+                            (:bldg_id,(:info)::JSON)
                     ON CONFLICT (building_num)
                     DO
                         UPDATE
                         SET
-                            rooms = (rooms::JSONB || ':info'::JSONB)::JSON
+                            rooms = (rooms::JSONB || (:info)::JSONB)::JSON
                         WHERE
-                            building_num = ':bldg_id';
+                            building_num = :bldg_id;
                 ";
 
                 $run = $db->prepare($sql_upsert);
@@ -40,13 +40,13 @@
                         buildings(name, alias,number,type,latitude,longitude,extra,deleted)
                     VALUES
                         (
-                            ':name',
-                            ':alias',
-                            ':num',
+                            :name,
+                            :alias,
+                            :num,
                             'BLDG',
-                            ':lat'::NUMERIC,
-                            ':long'::NUMERIC,
-                            ':extra'::JSON,
+                            (:lat)::NUMERIC,
+                            (:long)::NUMERIC,
+                            (:extra)::JSON,
                             false
                         )
                 ";
